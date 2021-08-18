@@ -12,14 +12,25 @@ public class TestMe1 {
         System.out.println(pawnB.canMoveToPosition(new ChessBoard("Black"), 5, 5, 4, 5));
         System.out.println();
 
+        System.out.println("\nСлон:");
+
         Bishop bishop = new Bishop("White");
-        System.out.println(bishop.canMoveToPosition(new ChessBoard("White"), 7,5,4,2));
+        System.out.println(bishop.canMoveToPosition(new ChessBoard("White"), 7,1,6,0));
 
         System.out.println("\nЛадья:");
 
         Rook rook = new Rook("Black");
         System.out.println(rook.canMoveToPosition(chessBoard1, 6,4,6,7));
 
+        System.out.println("\nФерзь:");
+
+        Queen queen = new Queen("Black");
+        System.out.println(queen.canMoveToPosition(chessBoard1, 1,2,5,2));
+
+        System.out.println("\nКороль:");
+
+        King king = new King("White");
+        System.out.println(king.canMoveToPosition(chessBoard1, 1,7,0,7));
 
 
     }
