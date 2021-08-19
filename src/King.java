@@ -10,13 +10,13 @@ public class King extends ChessPiece {
         if (((checkMove(toLine) && checkMove(toColumn) && checkMove(line) && checkMove(column)) &&
                 (Math.abs(toLine - line) == Math.abs(toColumn - column)) && ((line != toLine) && (column != toColumn))) &&
                 ((Math.abs(toLine - line) < 2) && (Math.abs(toColumn - column) < 2)))
-            return true;
+        {check = false; return true;}
 
         else if (((checkMove(toLine) && checkMove(toColumn) && checkMove(line) && checkMove(column)) &&
                 (((Math.abs(toLine - line) != 0) && (Math.abs(toColumn - column) == 0)) ||
                         ((Math.abs(toLine - line) == 0) && (Math.abs(toColumn - column) != 0)))) &&
                 ((Math.abs(toLine - line) < 2) && (Math.abs(toColumn - column) < 2)))
-            return true;
+        {check = false; return true;}
         else return false;
     }
 
@@ -33,6 +33,10 @@ public class King extends ChessPiece {
 
     boolean checkMove(int pos) {
         return pos >= 0 && pos <= 7;
+    }
+
+    public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
+        return false;
     }
 
 

@@ -6,9 +6,11 @@ public class TestMe1 {
         System.out.println(horseW1.canMoveToPosition(new ChessBoard("white"), 0, 7, 1, 5));
         System.out.println();
 
+        System.out.println("\nПешки:");
+
         Pawn pawnW = new Pawn ("White");
         Pawn pawnB = new Pawn ("Black");
-        System.out.println(pawnW.canMoveToPosition(new ChessBoard("White"), 2, 3, 3, 3));
+        System.out.println(pawnW.canMoveToPosition(new ChessBoard("White"), 6, 3, 7, 3));
         System.out.println(pawnB.canMoveToPosition(new ChessBoard("Black"), 5, 5, 4, 5));
         System.out.println();
 
@@ -31,6 +33,9 @@ public class TestMe1 {
 
         King king = new King("White");
         System.out.println(king.canMoveToPosition(chessBoard1, 1,7,0,7));
+
+//        ChessBoard chessBoard2 = new ChessBoard("Black");
+//        chessBoard2.printBoard();
 
 
     }

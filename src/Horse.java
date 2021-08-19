@@ -30,4 +30,10 @@ public class Horse extends ChessPiece {
     boolean checkMove(int pos) {
         return pos >= 0 && pos <= 7;
     }
+
+    public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
+        return false;
+    }
+
+
 }
