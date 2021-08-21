@@ -7,11 +7,11 @@ public class Queen extends ChessPiece {
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
 
-        if ((checkMove(toLine) && checkMove(toColumn) && checkMove(line) && checkMove(column)) &&
+        if ((checkPieseStartStopPosition(line,column, toLine, toColumn)) &&
                 (Math.abs(toLine - line) == Math.abs(toColumn - column)) && ((line != toLine) && (column != toColumn)))
             return true;
 
-        else if ((checkMove(toLine) && checkMove(toColumn) && checkMove(line) && checkMove(column)) &&
+        else if ((checkPieseStartStopPosition(line,column, toLine, toColumn)) &&
                 (((Math.abs(toLine - line) != 0) && (Math.abs(toColumn - column) == 0)) ||
                         ((Math.abs(toLine - line) == 0) && (Math.abs(toColumn - column) != 0))))
             return true;
@@ -29,11 +29,11 @@ public class Queen extends ChessPiece {
         return "Q";
     }
 
-    boolean checkMove(int pos) {
-        return pos >= 0 && pos <= 7;
-    }
+//    boolean checkMove(int pos) {
+//        return pos >= 0 && pos <= 7;
+//    }
 
-    public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
-        return false;
-    }
+//    public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
+//        return false;
+//    }
 }

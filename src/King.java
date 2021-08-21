@@ -7,17 +7,18 @@ public class King extends ChessPiece {
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
 
-        if (((checkMove(toLine) && checkMove(toColumn) && checkMove(line) && checkMove(column)) &&
+        if (((checkPieseStartStopPosition(line,column, toLine, toColumn)) &&
                 (Math.abs(toLine - line) == Math.abs(toColumn - column)) && ((line != toLine) && (column != toColumn))) &&
-                ((Math.abs(toLine - line) < 2) && (Math.abs(toColumn - column) < 2)))
-        {check = false; return true;}
-
-        else if (((checkMove(toLine) && checkMove(toColumn) && checkMove(line) && checkMove(column)) &&
+                ((Math.abs(toLine - line) < 2) && (Math.abs(toColumn - column) < 2))) {
+            check = false;
+            return true;
+        } else if (((checkPieseStartStopPosition(line,column, toLine, toColumn)) &&
                 (((Math.abs(toLine - line) != 0) && (Math.abs(toColumn - column) == 0)) ||
                         ((Math.abs(toLine - line) == 0) && (Math.abs(toColumn - column) != 0)))) &&
-                ((Math.abs(toLine - line) < 2) && (Math.abs(toColumn - column) < 2)))
-        {check = false; return true;}
-        else return false;
+                ((Math.abs(toLine - line) < 2) && (Math.abs(toColumn - column) < 2))) {
+            check = false;
+            return true;
+        } else return false;
     }
 
 
@@ -31,13 +32,17 @@ public class King extends ChessPiece {
         return "K";
     }
 
-    boolean checkMove(int pos) {
-        return pos >= 0 && pos <= 7;
-    }
-
     public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
         return false;
+
+//    boolean checkMove(int pos) {
+//        return pos >= 0 && pos <= 7;
+//    }
+
+//    public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
+//        return false;
+//    }
+
+
     }
-
-
 }

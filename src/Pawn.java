@@ -11,18 +11,21 @@ public class Pawn extends ChessPiece {
 
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
+        ChessBoard E = new ChessBoard("");
+
         final int STARTWHITE = 1;
         final int STARTBLACK = 6;
-        if ((checkMove(toLine) && checkMove(toColumn) && checkMove(line) && checkMove(column)) &&
+        if ((checkPieseStartStopPosition(line,column, toLine, toColumn)) &&
                 (toLine != line && toColumn == column)) {
             if (((color == "White" && line > STARTWHITE && (toLine - line) == 1)) ||
-                    ((color == "Black" && line < STARTBLACK && (line - toLine) == 1))) return true;
+                    ((color == "Black" && line < STARTBLACK && (line - toLine) == 1)))
+            {E.board[line][column] = null; return true;}
         } else return false;
-        if ((checkMove(toLine) && checkMove(toColumn) && checkMove(line) && checkMove(column)) &&
+        if ((checkPieseStartStopPosition(line,column, toLine, toColumn)) &&
                 (toLine != line && toColumn == column)) {
             if (((color == "White" && line == STARTWHITE) && (((toLine - line) == 2) || ((toLine - line) == 1))) ||
             (((color == "Black" && line == STARTBLACK)) && (((line - toLine) == 2) || ((line - toLine) == 1))))
-                return true;
+            { E.board[line][column] = null; return true;}
             else return false;
         } else return false;
     }
@@ -33,12 +36,12 @@ public class Pawn extends ChessPiece {
         return "P";
     }
 
-    boolean checkMove(int pos) {
-        return pos >= 0 && pos <= 7;
-    }
+//    boolean checkMove(int pos) {
+//        return pos >= 0 && pos <= 7;
+//    }
 
-    public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
-        return false;
-    }
+//    public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
+//        return false;
+//    }
 }
 

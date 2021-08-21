@@ -12,7 +12,7 @@ public class Horse extends ChessPiece {
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
 
-        if ((checkMove(toLine) && checkMove(toColumn)) && (toLine != line && toColumn != column)) {
+        if (checkPieseStartStopPosition(line,column, toLine, toColumn)) {
             if ((Math.abs(toLine - line) == 2 && Math.abs(toColumn - column) == 1) ||
                     (Math.abs(toLine - line) == 1 && Math.abs(toColumn - column) == 2)) {
                 return true;
@@ -27,13 +27,13 @@ public class Horse extends ChessPiece {
         return "H";
     }
 
-    boolean checkMove(int pos) {
-        return pos >= 0 && pos <= 7;
-    }
+//    boolean checkMove(int pos) {
+//        return pos >= 0 && pos <= 7;
+//    }
 
-    public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
-        return false;
-    }
+//    public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
+//        return false;
+//    }
 
 
 }
