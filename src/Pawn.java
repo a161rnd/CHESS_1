@@ -11,7 +11,6 @@ public class Pawn extends ChessPiece {
 
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
-        ChessBoard E = new ChessBoard("");
 
         final int STARTWHITE = 1;
         final int STARTBLACK = 6;
@@ -19,13 +18,13 @@ public class Pawn extends ChessPiece {
                 (toLine != line && toColumn == column)) {
             if (((color == "White" && line > STARTWHITE && (toLine - line) == 1)) ||
                     ((color == "Black" && line < STARTBLACK && (line - toLine) == 1)))
-            {E.board[line][column] = null; return true;}
+            return true;
         } else return false;
         if ((checkPieseStartStopPosition(line,column, toLine, toColumn)) &&
                 (toLine != line && toColumn == column)) {
             if (((color == "White" && line == STARTWHITE) && (((toLine - line) == 2) || ((toLine - line) == 1))) ||
             (((color == "Black" && line == STARTBLACK)) && (((line - toLine) == 2) || ((line - toLine) == 1))))
-            { E.board[line][column] = null; return true;}
+             return true;
             else return false;
         } else return false;
     }

@@ -1,3 +1,5 @@
+import java.util.regex.Pattern;
+
 public class ChessBoard {
 
     public ChessPiece[][] board = new ChessPiece[8][8]; // creating a field for game
@@ -12,6 +14,9 @@ public class ChessBoard {
     }
 
     public boolean moveToPosition(int startLine, int startColumn, int endLine, int endColumn) {
+
+        String pieseName = board[startLine][startColumn].getSymbol();
+
         if (checkPos(startLine) && checkPos(startColumn)) {
 
             if (!nowPlayer.equals(board[startLine][startColumn].getColor())) return false;
@@ -23,13 +28,32 @@ public class ChessBoard {
                     board[startLine][startColumn].check = false;
                 }
 
-                board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
+                if ((Pattern.matches("[QB]", pieseName)) /*(board[startLine][startColumn].getSymbol().equals("B")*/ &&
+                        checkDiagonalDirection(startLine, startColumn, endLine, endColumn) == false) {
+                    System.out.println("проверка диагонали = false ");
+                    return false;
+                }
+//                    if ((Pattern.matches("[Q]", pieseName)) &&
+//                            checkStraightDirection(startLine, startColumn, endLine, endColumn)) {
+//                    }
+                if ((Pattern.matches("[QR]", pieseName)) &&
+                        (checkStraightDirection(startLine, startColumn, endLine, endColumn)) == false)  {
+                    System.out.println("проверка прямой = false ");
+                    return false;
+                }
+//                    if ((Pattern.matches("[Q]", pieseName)) &&
+//                            checkDiagonalDirection(startLine, startColumn, endLine, endColumn)) {
+//                    }
+
+
+                    board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
                 board[startLine][startColumn] = null; // set null to previous cell
                 this.nowPlayer = this.nowPlayerColor().equals("White") ? "Black" : "White";
-
                 return true;
-            } else return false;
-        } else return false;
+            }
+            return false;
+        }
+        return false;
     }
 
     public void printBoard() {  //print board in console
@@ -131,6 +155,63 @@ public class ChessBoard {
                 } else return false;
             } else return false;
         }
+    }
+
+
+    public boolean checkStraightDirection(int line, int column, int toLine, int toColumn) {
+
+        int straightlDirection = 0;
+
+        {
+            if
+            (toLine == line && toColumn != column) straightlDirection = 1; // горизонт направл
+            if (toLine != line && toColumn == column) straightlDirection = 2; // вертик направ
+        }
+
+        if (straightlDirection == 1) // горизонт
+            for (int s = Math.min(column, toColumn) + 1; s < Math.max(column, toColumn); s++) {
+                if (board[line][s] != null) return false;
+            }
+
+        if (straightlDirection == 2)  // вертикал
+            for (int s = Math.min(line, toLine) + 1; s < Math.max(line, toLine); s++) {
+                if (board[s][column] != null) return false;
+            }
+        return true;
+    }
+
+
+    public boolean checkDiagonalDirection(int line, int column, int toLine, int toColumn) {
+
+        int diagonalDirection = 0;
+        int cntLine = 0;
+        int cntColumn = 0;
+        {
+            if
+            ((toLine - line > 0 && toColumn - column > 0) || (toLine - line < 0 && toColumn - column < 0))
+                diagonalDirection = 1; // слева - направо, снизу вверз (или наоборот)
+            if (toColumn - column < 0 && toLine - line > 0) diagonalDirection = 2; // справа - налево, снизу вверх
+            else if (toColumn - column > 0 && toLine - line < 0) diagonalDirection = 3; // слева ноправо, сверху вниз
+        }
+
+        if (diagonalDirection == 1) // слева - направо, снизу вверз (или наоборот)
+            for (int s = Math.min(line, toLine) + 1; s < Math.max(line, toLine); s++) {
+                cntColumn++;
+                if (board[s][Math.min(column, toColumn) + cntColumn] != null) return false;
+            }
+
+        if (diagonalDirection == 2)     // справа - налево, снизу вверх
+            for (int s = Math.min(line, toLine) + 1; s < Math.max(line, toLine); s++) {
+                cntColumn--;
+                if (board[s][Math.max(column, toColumn) + cntColumn] != null) return false;
+            }
+
+        if (diagonalDirection == 3)  // слева ноправо, сверху вниз
+            for (int s = Math.min(column, toColumn) + 1; s < Math.max(column, toColumn); s++) {
+                cntLine--;
+                if (board[Math.max(line, toLine) + cntLine][s] != null) return false;
+            }
+        return true;
     }
 
 }
