@@ -2,12 +2,11 @@ public abstract class ChessPiece {
 
     String color;
     boolean check = true;  //  checkCastling can be castled if move is first, then it becomes to false
-    boolean directionCheck = false;
 
-    int line ;
-    int toLine;
-    int column;
-    int toColumn;
+//    int line ;
+//    int toLine;
+//    int column;
+//    int toColumn;
 
     public ChessPiece(String color) {
         this.color = color;

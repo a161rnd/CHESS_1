@@ -1,5 +1,7 @@
 public class King extends ChessPiece {
 
+    public boolean kingCheck = false;
+
     public King(String color) {
         super(color);
     }
@@ -7,12 +9,12 @@ public class King extends ChessPiece {
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
 
-        if (((checkPieseStartStopPosition(line,column, toLine, toColumn)) &&
+        if (((checkPieseStartStopPosition(line, column, toLine, toColumn)) &&
                 (Math.abs(toLine - line) == Math.abs(toColumn - column)) && ((line != toLine) && (column != toColumn))) &&
                 ((Math.abs(toLine - line) < 2) && (Math.abs(toColumn - column) < 2))) {
             check = false;
             return true;
-        } else if (((checkPieseStartStopPosition(line,column, toLine, toColumn)) &&
+        } else if (((checkPieseStartStopPosition(line, column, toLine, toColumn)) &&
                 (((Math.abs(toLine - line) != 0) && (Math.abs(toColumn - column) == 0)) ||
                         ((Math.abs(toLine - line) == 0) && (Math.abs(toColumn - column) != 0)))) &&
                 ((Math.abs(toLine - line) < 2) && (Math.abs(toColumn - column) < 2))) {
@@ -33,16 +35,10 @@ public class King extends ChessPiece {
     }
 
     public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
+        for (int i = 0; i < chessBoard.board.length - 1; i++) {
+            if (canMoveToPosition(chessBoard, i, i, line, column))
+                return true;
+        }
         return false;
-
-//    boolean checkMove(int pos) {
-//        return pos >= 0 && pos <= 7;
-//    }
-
-//    public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
-//        return false;
-//    }
-
-
     }
 }
