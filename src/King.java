@@ -20,6 +20,8 @@ public class King extends ChessPiece {
                 ((Math.abs(toLine - line) < 2) && (Math.abs(toColumn - column) < 2))) {
             check = false;
             return true;
+
+
         } else return false;
     }
 
@@ -35,10 +37,38 @@ public class King extends ChessPiece {
     }
 
     public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
-        for (int i = 0; i < chessBoard.board.length - 1; i++) {
-            if (canMoveToPosition(chessBoard, i, i, line, column))
-                return true;
+
+        int kingLine = 0;
+        int kingColumn = 4;
+
+        for (int i = 0; i < chessBoard.board.length; i++) {
+            for (int j = 0; j < chessBoard.board.length; j++) {
+
+                if ((chessBoard.board[i][j] != null) &&
+                        (chessBoard.board[i][j].getSymbol().equals("K"))
+                        && (chessBoard.board[i][j].getColor().equals(this.getColor()))) {
+                    kingLine = i;
+                    kingColumn = j;
+                }
+            }
         }
+
+        for (int s = 0; s < chessBoard.board.length; s++)
+            for (int w = 0; w < chessBoard.board.length; w++)
+                if ((chessBoard.board[s][w] != null) && (!(chessBoard.board[s][w].getColor().equals(this.getColor())))) {
+                    if (chessBoard.moveToPositionCopy(s, w, line, column)) {
+                        System.out.println("Field [" + line + "]" + "[" + column + "]" + " is under Attack !");
+                        return true;
+                    }
+                    if (chessBoard.moveToPositionCopy(s, w, kingLine, kingColumn)) {
+                        System.out.println("Checks the " + chessBoard.board[kingLine][kingColumn].getColor() + " King !!!");
+                        return true;
+                    }
+
+
+                }
         return false;
     }
+
+
 }

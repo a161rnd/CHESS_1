@@ -2,7 +2,6 @@ import java.util.regex.Pattern;
 
 public class ChessBoard {
 
-    public String chekKingInfo = "";
 
     public ChessPiece[][] board = new ChessPiece[8][8]; // creating a field for game
     String nowPlayer;
@@ -19,9 +18,13 @@ public class ChessBoard {
 
         String pieceName = board[startLine][startColumn].getSymbol();
 
+
         if (checkPos(startLine) && checkPos(startColumn)) {
 
-            if (!nowPlayer.equals(board[startLine][startColumn].getColor())) return false;
+            if (!nowPlayer.equals(board[startLine][startColumn].getColor()))
+                return false;
+            if ((board[endLine][endColumn] != null) && nowPlayer.equals(board[endLine][endColumn].getColor()))
+                return false;
 
             if (board[startLine][startColumn].canMoveToPosition(this, startLine, startColumn, endLine, endColumn)) {
 
@@ -37,21 +40,16 @@ public class ChessBoard {
                 }
 
                 if ((Pattern.matches("[QR]", pieceName)) &&
-                        (checkStraightDirection(startLine, startColumn, endLine, endColumn)) == false)  {
+                        (checkStraightDirection(startLine, startColumn, endLine, endColumn)) == false) {
                     System.out.println("проверка прямой = false ");
                     return false;
                 }
 
 
-
-                    board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
+                board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
                 board[startLine][startColumn] = null; // set null to previous cell
                 this.nowPlayer = this.nowPlayerColor().equals("White") ? "Black" : "White";
 
-//                for (int i = 0; i < board.length - 1; i++){
-//                 if (board[i][i] == new King(nowPlayer)) new King(nowPlayer).isUnderAttack(this, i, i);
-//                    /*chekKingInfo = "ШАХ !!!";*/System.out.println("Шах!!!"); new King(nowPlayer).kingCheck = true;
-//                }
                 return true;
             }
             return false;
@@ -78,7 +76,8 @@ public class ChessBoard {
             System.out.println();
         }
         System.out.println("Player 1(White)");
-//        System.out.println(chekKingInfo);
+        printFigureCanAttackKing();
+
     }
 
     public boolean checkPos(int pos) {
@@ -218,4 +217,102 @@ public class ChessBoard {
         return true;
     }
 
+    public void printFigureCanAttackKing() {
+        int kingLine = 0;
+        int kingColumn = 4;
+
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board.length; j++) {
+
+                if ((board[i][j] != null) &&
+                        (board[i][j].getSymbol().equals("K"))
+                        && (board[i][j].getColor().equals(nowPlayer))) {
+                    kingLine = i;
+                    kingColumn = j;
+                    System.out.println("King " + nowPlayer + " on [" + kingLine + "]" + "[" + kingColumn + "]");
+                }
+            }
+        }
+
+        for (int s = 0; s < board.length; s++)
+            for (int w = 0; w < board.length; w++)
+                if ((board[s][w] != null) && (!(board[s][w].getColor().equals(nowPlayer)))) {
+                    if (moveToPositionCopy(s, w, kingLine, kingColumn)) {
+                        System.out.println("[" + s + "]" + "[" + w + "] " + board[s][w].getSymbol() +
+                                " checks the " + board[kingLine][kingColumn].getColor() + " King");
+                    }
+                }
+    }
+
+
+//    public boolean isKingUnderAttack(ChessBoard chessBoard, int line, int column) {
+//
+//        int kingLine = 0;
+//        int kingColumn = 4;
+//
+//        for (int i = 0; i < chessBoard.board.length; i++) {
+//            for (int j = 0; j < chessBoard.board.length; j++) {
+//
+//                if ((chessBoard.board[i][j] != null) &&
+//                        (chessBoard.board[i][j].getSymbol().equals("K"))
+//                        && (chessBoard.board[i][j].getColor().equals(nowPlayer))) {
+//                    kingLine = i;
+//                    kingColumn = j;
+//                }
+//            }
+//        }
+//
+//        for (int s = 0; s < chessBoard.board.length; s++)
+//            for (int w = 0; w < chessBoard.board.length; w++)
+//                if ((chessBoard.board[s][w] != null) && (!(chessBoard.board[s][w].getColor().equals(nowPlayer)))) {
+//                    if (chessBoard.moveToPositionCopy(s, w, line, column)) {
+//                        System.out.println("Field [" + line + "]" + "[" + column + "]" + " is under Attack !");
+//                        return true;
+//                    }
+//                    if (chessBoard.moveToPositionCopy(s, w, kingLine, kingColumn)) {
+//                        System.out.println("Checks the " + chessBoard.board[kingLine][kingColumn].getColor() + " King !!!");
+//                        return true;
+//                    }
+//
+//
+//                }
+//        return false;
+//    }
+
+
+    public boolean moveToPositionCopy(int startLine, int startColumn, int endLine, int endColumn) {
+
+        String pieceName = board[startLine][startColumn].getSymbol();
+
+        if (checkPos(startLine) && checkPos(startColumn)) {
+
+            if (board[startLine][startColumn].canMoveToPosition(this, startLine, startColumn, endLine, endColumn)) {
+
+                if (board[startLine][startColumn].getSymbol().equals("K") ||  // check position for castling
+                        board[startLine][startColumn].getSymbol().equals("R")) {
+                    board[startLine][startColumn].check = false;
+                }
+
+                if ((Pattern.matches("[QB]", pieceName)) &&
+                        checkDiagonalDirection(startLine, startColumn, endLine, endColumn) == false) {
+                    System.out.println("проверка диагонали = false ");
+                    return false;
+                }
+
+                if ((Pattern.matches("[QR]", pieceName)) &&
+                        (checkStraightDirection(startLine, startColumn, endLine, endColumn)) == false) {
+                    System.out.println("проверка прямой = false ");
+                    return false;
+                }
+
+//                board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
+//                board[startLine][startColumn] = null; // set null to previous cell
+//                this.nowPlayer = this.nowPlayerColor().equals("White") ? "Black" : "White";
+
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 }

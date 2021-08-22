@@ -54,6 +54,10 @@ public class Main {
                Проверьте могут ли фигуры ходить друг сквозь друга, корректно ли съедают друг друга, можно ли поставить шах и сделать рокировку?""");
         System.out.println();
         board.printBoard();
+
+//        System.out.println(board.board[6][7].getSymbol());
+//        System.out.println(board.board[5][7].getSymbol());
+
         while (true) {
             String s = scanner.nextLine();
             if (s.equals("exit")) break;
@@ -86,6 +90,7 @@ public class Main {
                         if (board.moveToPosition(line, column, toLine, toColumn)) {
                             System.out.println("Успешно передвинулись");
                             board.printBoard();
+
                         } else System.out.println("Передвижение не удалось");
                     } catch (Exception e) {
                         System.out.println("Вы что-то ввели не так, попробуйте ещё раз");

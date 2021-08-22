@@ -1,6 +1,6 @@
 public abstract class ChessPiece {
 
-    String color;
+     String color;
     boolean check = true;  //  checkCastling can be castled if move is first, then it becomes to false
 
 //    int line ;
