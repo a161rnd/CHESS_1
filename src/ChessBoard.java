@@ -5,6 +5,11 @@ public class ChessBoard {
 
     public ChessPiece[][] board = new ChessPiece[8][8]; // creating a field for game
     String nowPlayer;
+    boolean whiteKingCheck = false;
+    boolean blackKingCheck = false;
+    public boolean kingCheck() {
+        if ((!(whiteKingCheck)) || (!(blackKingCheck))) return true;
+        else return false;  }
 
     public ChessBoard(String nowPlayer) {
         this.nowPlayer = nowPlayer;
@@ -49,7 +54,8 @@ public class ChessBoard {
                 board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
                 board[startLine][startColumn] = null; // set null to previous cell
                 this.nowPlayer = this.nowPlayerColor().equals("White") ? "Black" : "White";
-
+                checkWhiteKingsUnderAttack(); // проверяем наличие шаха белым
+                checkBlackKingsUnderAttack(); // проверяем наличие шаха черным
                 return true;
             }
             return false;
@@ -160,7 +166,6 @@ public class ChessBoard {
         }
     }
 
-
     public boolean checkStraightDirection(int line, int column, int toLine, int toColumn) {
 
         int straightlDirection = 0;
@@ -182,7 +187,6 @@ public class ChessBoard {
             }
         return true;
     }
-
 
     public boolean checkDiagonalDirection(int line, int column, int toLine, int toColumn) {
 
@@ -237,7 +241,7 @@ public class ChessBoard {
         for (int s = 0; s < board.length; s++)
             for (int w = 0; w < board.length; w++)
                 if ((board[s][w] != null) && (!(board[s][w].getColor().equals(nowPlayer)))) {
-                    if (moveToPositionCopy(s, w, kingLine, kingColumn)) {
+                    if (moveToPositionCheckingForBothPlayers(s, w, kingLine, kingColumn)) {
                         System.out.println("[" + s + "]" + "[" + w + "] " + board[s][w].getSymbol() +
                                 " checks the " + board[kingLine][kingColumn].getColor() + " King");
                     }
@@ -280,7 +284,7 @@ public class ChessBoard {
 //    }
 
 
-    public boolean moveToPositionCopy(int startLine, int startColumn, int endLine, int endColumn) {
+    public boolean moveToPositionCheckingForBothPlayers(int startLine, int startColumn, int endLine, int endColumn) {
 
         String pieceName = board[startLine][startColumn].getSymbol();
 
@@ -315,4 +319,62 @@ public class ChessBoard {
         }
         return false;
     }
+
+    public boolean checkWhiteKingsUnderAttack() {
+
+        int kingLine = 0;
+        int kingColumn = 4;
+
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board.length; j++) {
+
+                if ((board[i][j] != null) &&
+                        (board[i][j].getSymbol().equals("K"))
+                        && (board[i][j].getColor().equals("White"))) {
+                    kingLine = i;
+                    kingColumn = j;
+                }
+            }
+        }
+
+        for (int s = 0; s < board.length; s++)
+            for (int w = 0; w < board.length; w++)
+                if ((board[s][w] != null) && (board[s][w].getColor().equals("Black"))) {
+                    if (moveToPositionCheckingForBothPlayers(s, w, kingLine, kingColumn)) {
+                        System.out.println(("\nCheck to the White !!!"));
+                        whiteKingCheck = true;
+                        return true;
+                    }
+                } return false;
+    }
+
+    public boolean checkBlackKingsUnderAttack() {
+
+        int kingLine = 0;
+        int kingColumn = 4;
+
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board.length; j++) {
+
+                if ((board[i][j] != null) &&
+                        (board[i][j].getSymbol().equals("K"))
+                        && (board[i][j].getColor().equals("Black"))) {
+                    kingLine = i;
+                    kingColumn = j;
+                }
+            }
+        }
+
+        for (int s = 0; s < board.length; s++)
+            for (int w = 0; w < board.length; w++)
+                if ((board[s][w] != null) && (board[s][w].getColor().equals("White"))) {
+                    if (moveToPositionCheckingForBothPlayers(s, w, kingLine, kingColumn)) {
+                        System.out.println(("\nCheck to the Black !!!"));
+                        blackKingCheck = true;
+                        return true;
+                    }
+                } return false;
+    }
 }
+
+

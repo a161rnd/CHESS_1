@@ -56,11 +56,11 @@ public class King extends ChessPiece {
         for (int s = 0; s < chessBoard.board.length; s++)
             for (int w = 0; w < chessBoard.board.length; w++)
                 if ((chessBoard.board[s][w] != null) && (!(chessBoard.board[s][w].getColor().equals(this.getColor())))) {
-                    if (chessBoard.moveToPositionCopy(s, w, line, column)) {
+                    if (chessBoard.moveToPositionCheckingForBothPlayers(s, w, line, column)) {
                         System.out.println("Field [" + line + "]" + "[" + column + "]" + " is under Attack !");
                         return true;
                     }
-                    if (chessBoard.moveToPositionCopy(s, w, kingLine, kingColumn)) {
+                    if (chessBoard.moveToPositionCheckingForBothPlayers(s, w, kingLine, kingColumn)) {
                         System.out.println("Checks the " + chessBoard.board[kingLine][kingColumn].getColor() + " King !!!");
                         return true;
                     }
