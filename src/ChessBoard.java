@@ -5,7 +5,7 @@ public class ChessBoard {
 
     public ChessPiece[][] board = new ChessPiece[8][8]; // creating a field for game
     String nowPlayer;
-    boolean whiteKingCheck = false;
+    boolean whiteKingCheck = false;  // !!!!  доработать использ переменных для проверки возм-ти следующ хода
     boolean blackKingCheck = false;
     public boolean kingCheck() {
         if ((!(whiteKingCheck)) || (!(blackKingCheck))) return true;
