@@ -14,17 +14,29 @@ public class Pawn extends ChessPiece {
 
         final int STARTWHITE = 1;
         final int STARTBLACK = 6;
-        if ((checkPieseStartStopPosition(line,column, toLine, toColumn)) &&
-                (toLine != line && toColumn == column)) {
+
+
+        if ((color == "White") && /*возможность бить пешкой*/
+                (checkPieseStartStopPosition(line, column, toLine, toColumn)) &&
+                (chessBoard.board[toLine][toColumn] != null) &&
+                ((toLine == line + 1) && (toColumn == column + 1 || toColumn == column - 1))) return true;
+
+        if ((color == "Black") && /*возможность бить пешкой*/
+                (checkPieseStartStopPosition(line, column, toLine, toColumn)) &&
+                (chessBoard.board[toLine][toColumn] != null) &&
+                ((toLine == line - 1) && (toColumn == column + 1 || toColumn == column - 1))) return true;
+
+        if ((checkPieseStartStopPosition(line, column, toLine, toColumn)) && // корректность хода пешки, первого хода,запрет бить прямо
+                (chessBoard.board[toLine][toColumn] == null) &&   (toLine != line && toColumn == column)) {
             if (((color == "White" && line > STARTWHITE && (toLine - line) == 1)) ||
                     ((color == "Black" && line < STARTBLACK && (line - toLine) == 1)))
-            return true;
+                return true;
         } else return false;
-        if ((checkPieseStartStopPosition(line,column, toLine, toColumn)) &&
-                (toLine != line && toColumn == column)) {
+        if ((checkPieseStartStopPosition(line, column, toLine, toColumn)) &&
+                (chessBoard.board[toLine][toColumn] == null) &&   (toLine != line && toColumn == column)) {
             if (((color == "White" && line == STARTWHITE) && (((toLine - line) == 2) || ((toLine - line) == 1))) ||
-            (((color == "Black" && line == STARTBLACK)) && (((line - toLine) == 2) || ((line - toLine) == 1))))
-             return true;
+                    (((color == "Black" && line == STARTBLACK)) && (((line - toLine) == 2) || ((line - toLine) == 1))))
+                return true;
             else return false;
         } else return false;
     }
@@ -35,12 +47,5 @@ public class Pawn extends ChessPiece {
         return "P";
     }
 
-//    boolean checkMove(int pos) {
-//        return pos >= 0 && pos <= 7;
-//    }
-
-//    public boolean isUnderAttack(ChessBoard chessBoard, int line, int column) {
-//        return false;
-//    }
 }
 

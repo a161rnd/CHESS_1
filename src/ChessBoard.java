@@ -1,15 +1,28 @@
+
+/*
+* @author Гуренко Андрей
+* vers 1.1
+* Что смог реализовать:
+* проверка корректности ходов всех фигур
+* у пешки: возможность бить по диагонали и невозможность бить прямо, проход в Ферзи
+* проверка хода на Шах (фиксация наличия Шаха на доске)
+*
+* Что не получилось:
+* создать способ анализа будущей ситуации на доске, для реализации невозможности ходить, если ход не отменяет шах
+* попытки этой реализации в закомментированных блоках
+*
+* */
+
+
 import java.util.regex.Pattern;
 
-public class ChessBoard {
+public class ChessBoard implements Cloneable{
 
 
     public ChessPiece[][] board = new ChessPiece[8][8]; // creating a field for game
+
     String nowPlayer;
-    boolean whiteKingCheck = false;  // !!!!  доработать использ переменных для проверки возм-ти следующ хода
-    boolean blackKingCheck = false;
-    public boolean kingCheck() {
-        if ((!(whiteKingCheck)) || (!(blackKingCheck))) return true;
-        else return false;  }
+//  String colorOfKingUnderAttack;
 
     public ChessBoard(String nowPlayer) {
         this.nowPlayer = nowPlayer;
@@ -50,12 +63,19 @@ public class ChessBoard {
                     return false;
                 }
 
+//              if (checkPositionAfterMove(startLine, startColumn, endLine, endColumn) == false) return false;
 
                 board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
                 board[startLine][startColumn] = null; // set null to previous cell
+
+                if ((Pattern.matches("[P]", pieceName)) && (((nowPlayer.equals("White") && endLine == 7) || // проход в ферзи
+                        ((nowPlayer.equals("Black")) && endLine == 0))))
+                    board[endLine][endColumn] = new Queen(nowPlayer);
+
                 this.nowPlayer = this.nowPlayerColor().equals("White") ? "Black" : "White";
                 checkWhiteKingsUnderAttack(); // проверяем наличие шаха белым
                 checkBlackKingsUnderAttack(); // проверяем наличие шаха черным
+
                 return true;
             }
             return false;
@@ -82,7 +102,6 @@ public class ChessBoard {
             System.out.println();
         }
         System.out.println("Player 1(White)");
-        printFigureCanAttackKing();
 
     }
 
@@ -109,18 +128,18 @@ public class ChessBoard {
                 } else return false;
             } else return false;
         } else {
-            if (board[7][0] == null || board[7][4] == null) return false;
-            if (board[7][0].getSymbol().equals("R") && board[7][4].getSymbol().equals("K") && // check that King and Rook
-                    board[7][1] == null && board[7][2] == null && board[7][3] == null) {              // never moved
-                if (board[7][0].getColor().equals("Black") && board[7][4].getColor().equals("Black") &&
-                        board[7][0].check && board[7][4].check &&
-                        !new King("Black").isUnderAttack(this, 7, 2)) { // check that position not in under attack
-                    board[7][4] = null;
-                    board[7][2] = new King("Black");   // move King
-                    board[7][2].check = false;
-                    board[7][0] = null;
-                    board[7][3] = new Rook("Black");   // move Rook
-                    board[7][3].check = false;
+            if (board[0][7] == null || board[0][4] == null) return false;
+            if (board[0][7].getSymbol().equals("R") && board[0][4].getSymbol().equals("K") && // check that King and Rook
+                    board[0][6] == null && board[0][5] == null) {              // never moved
+                if (board[0][7].getColor().equals("White") && board[0][4].getColor().equals("White") &&
+                        board[0][7].check && board[0][4].check &&
+                        !new King("White").isUnderAttack(this, 7, 2)) { // check that position not in under attack
+                    board[0][4] = null;
+                    board[0][6] = new King("White");   // move King
+                    board[0][6].check = false;
+                    board[0][7] = null;
+                    board[0][5] = new Rook("White");   // move Rook
+                    board[0][5].check = false;
                     nowPlayer = "White";  // next turn
                     return true;
                 } else return false;
@@ -129,19 +148,19 @@ public class ChessBoard {
     }
 
     public boolean castling7() {
-        if (nowPlayer.equals("White")) {
-            if (board[0][7] == null || board[0][4] == null) return false;
-            if (board[0][7].getSymbol().equals("R") && board[0][4].getSymbol().equals("K") && // check that King and Rook
-                    board[0][6] == null && board[0][5] == null) {              // never moved
-                if (board[0][7].getColor().equals("White") && board[0][4].getColor().equals("White") &&
-                        board[0][7].check && board[0][4].check &&
-                        !new King("White").isUnderAttack(this, 0, 6)) { // check that position not in under attack
-                    board[0][4] = null;
-                    board[0][6] = new King("White");   // move King
-                    board[0][6].check = false;
-                    board[0][7] = null;
-                    board[0][5] = new Rook("White");   // move Rook
-                    board[0][5].check = false;
+        if (nowPlayer.equals("Black")) {
+            if (board[7][0] == null || board[7][4] == null) return false;
+            if (board[7][0].getSymbol().equals("R") && board[7][4].getSymbol().equals("K") && // check that King and Rook
+                    board[7][1] == null && board[7][2] == null && board[7][3] == null) {              // never moved
+                if (board[7][0].getColor().equals("Black") && board[7][4].getColor().equals("Black") &&
+                        board[7][0].check && board[7][4].check &&
+                        !new King("Black").isUnderAttack(this, 0, 2)) { // check that position not in under attack
+                    board[7][4] = null;
+                    board[7][2] = new King("Black");   // move King
+                    board[7][2].check = false;
+                    board[7][0] = null;
+                    board[7][3] = new Rook("Black");   // move Rook
+                    board[7][3].check = false;
                     nowPlayer = "Black";  // next turn
                     return true;
                 } else return false;
@@ -152,21 +171,21 @@ public class ChessBoard {
                     board[7][6] == null && board[7][5] == null) {              // never moved
                 if (board[7][7].getColor().equals("Black") && board[7][4].getColor().equals("Black") &&
                         board[7][7].check && board[7][4].check &&
-                        !new King("Black").isUnderAttack(this, 7, 6)) { // check that position not in under attack
+                        !new King("Black").isUnderAttack(this, 7, 2)) { // check that position not in under attack
                     board[7][4] = null;
                     board[7][6] = new King("Black");   // move King
                     board[7][6].check = false;
                     board[7][7] = null;
                     board[7][5] = new Rook("Black");   // move Rook
                     board[7][5].check = false;
-                    nowPlayer = "White";  // next turn
+                    nowPlayer = "Black";  // next turn
                     return true;
                 } else return false;
             } else return false;
         }
     }
 
-    public boolean checkStraightDirection(int line, int column, int toLine, int toColumn) {
+    public boolean checkStraightDirection(int line, int column, int toLine, int toColumn) { /*проверка прямых ходов*/
 
         int straightlDirection = 0;
 
@@ -188,7 +207,7 @@ public class ChessBoard {
         return true;
     }
 
-    public boolean checkDiagonalDirection(int line, int column, int toLine, int toColumn) {
+    public boolean checkDiagonalDirection(int line, int column, int toLine, int toColumn) {  /*проверка диагональных ходов*/
 
         int diagonalDirection = 0;
         int cntLine = 0;
@@ -221,66 +240,14 @@ public class ChessBoard {
         return true;
     }
 
-    public void printFigureCanAttackKing() {
-        int kingLine = 0;
-        int kingColumn = 4;
-
-        for (int i = 0; i < this.board.length; i++) {
-            for (int j = 0; j < this.board.length; j++) {
-
-                if ((board[i][j] != null) &&
-                        (board[i][j].getSymbol().equals("K"))
-                        && (board[i][j].getColor().equals(nowPlayer))) {
-                    kingLine = i;
-                    kingColumn = j;
-                    System.out.println("King " + nowPlayer + " on [" + kingLine + "]" + "[" + kingColumn + "]");
-                }
-            }
-        }
-
-        for (int s = 0; s < board.length; s++)
-            for (int w = 0; w < board.length; w++)
-                if ((board[s][w] != null) && (!(board[s][w].getColor().equals(nowPlayer)))) {
-                    if (moveToPositionCheckingForBothPlayers(s, w, kingLine, kingColumn)) {
-                        System.out.println("[" + s + "]" + "[" + w + "] " + board[s][w].getSymbol() +
-                                " checks the " + board[kingLine][kingColumn].getColor() + " King");
-                    }
-                }
-    }
-
-
-//    public boolean isKingUnderAttack(ChessBoard chessBoard, int line, int column) {
+//    public boolean isAnyKingUnderAttack() {
 //
-//        int kingLine = 0;
-//        int kingColumn = 4;
+//        if (checkWhiteKingsUnderAttack() == true) colorOfKingUnderAttack = "White";
+//        if (checkBlackKingsUnderAttack() == true) colorOfKingUnderAttack = "Black";
 //
-//        for (int i = 0; i < chessBoard.board.length; i++) {
-//            for (int j = 0; j < chessBoard.board.length; j++) {
-//
-//                if ((chessBoard.board[i][j] != null) &&
-//                        (chessBoard.board[i][j].getSymbol().equals("K"))
-//                        && (chessBoard.board[i][j].getColor().equals(nowPlayer))) {
-//                    kingLine = i;
-//                    kingColumn = j;
-//                }
-//            }
-//        }
-//
-//        for (int s = 0; s < chessBoard.board.length; s++)
-//            for (int w = 0; w < chessBoard.board.length; w++)
-//                if ((chessBoard.board[s][w] != null) && (!(chessBoard.board[s][w].getColor().equals(nowPlayer)))) {
-//                    if (chessBoard.moveToPositionCopy(s, w, line, column)) {
-//                        System.out.println("Field [" + line + "]" + "[" + column + "]" + " is under Attack !");
-//                        return true;
-//                    }
-//                    if (chessBoard.moveToPositionCopy(s, w, kingLine, kingColumn)) {
-//                        System.out.println("Checks the " + chessBoard.board[kingLine][kingColumn].getColor() + " King !!!");
-//                        return true;
-//                    }
-//
-//
-//                }
-//        return false;
+//        if (checkWhiteKingsUnderAttack() == true || checkBlackKingsUnderAttack() == true)
+//            return true;
+//        else return false;
 //    }
 
 
@@ -299,26 +266,34 @@ public class ChessBoard {
 
                 if ((Pattern.matches("[QB]", pieceName)) &&
                         checkDiagonalDirection(startLine, startColumn, endLine, endColumn) == false) {
-                    System.out.println("проверка диагонали = false ");
+//                    System.out.println("проверка диагонали = false ");
                     return false;
                 }
 
                 if ((Pattern.matches("[QR]", pieceName)) &&
                         (checkStraightDirection(startLine, startColumn, endLine, endColumn)) == false) {
-                    System.out.println("проверка прямой = false ");
+//                    System.out.println("проверка прямой = false ");
                     return false;
                 }
-
-//                board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
-//                board[startLine][startColumn] = null; // set null to previous cell
-//                this.nowPlayer = this.nowPlayerColor().equals("White") ? "Black" : "White";
-
                 return true;
+              }
+                return false;
             }
             return false;
         }
-        return false;
-    }
+
+
+//    public boolean checkPositionAfterMove(int startLine, int startColumn, int endLine, int endColumn) {
+//
+//
+//        if ((board[endLine][endColumn]== board[startLine][startColumn]) &&
+//                ((board[startLine][startColumn] == null)))  {
+//
+//            if (isAnyKingUnderAttack() == true && colorOfKingUnderAttack.equals(nowPlayer)) return false;
+//
+//
+//        } return true;
+//    }
 
     public boolean checkWhiteKingsUnderAttack() {
 
@@ -342,15 +317,15 @@ public class ChessBoard {
                 if ((board[s][w] != null) && (board[s][w].getColor().equals("Black"))) {
                     if (moveToPositionCheckingForBothPlayers(s, w, kingLine, kingColumn)) {
                         System.out.println(("\nCheck to the White !!!"));
-                        whiteKingCheck = true;
                         return true;
                     }
-                } return false;
+                }
+        return false;
     }
 
     public boolean checkBlackKingsUnderAttack() {
 
-        int kingLine = 0;
+        int kingLine = 7;
         int kingColumn = 4;
 
         for (int i = 0; i < this.board.length; i++) {
@@ -370,11 +345,13 @@ public class ChessBoard {
                 if ((board[s][w] != null) && (board[s][w].getColor().equals("White"))) {
                     if (moveToPositionCheckingForBothPlayers(s, w, kingLine, kingColumn)) {
                         System.out.println(("\nCheck to the Black !!!"));
-                        blackKingCheck = true;
                         return true;
                     }
-                } return false;
+                }
+        return false;
     }
+
+
 }
 
 
