@@ -1,22 +1,22 @@
 
 /*
-* @author Гуренко Андрей
-* vers 1.1
-* Что смог реализовать:
-* проверка корректности ходов всех фигур
-* у пешки: возможность бить по диагонали и невозможность бить прямо, проход в Ферзи
-* проверка хода на Шах (фиксация наличия Шаха на доске)
-*
-* Что не получилось:
-* создать способ анализа будущей ситуации на доске, для реализации невозможности ходить, если ход не отменяет шах
-* попытки этой реализации в закомментированных блоках
-*
-* */
+ * @author Гуренко Андрей
+ * vers 1.1
+ * Что смог реализовать:
+ * проверка корректности ходов всех фигур
+ * у пешки: возможность бить по диагонали и невозможность бить прямо, проход в Ферзи
+ * проверка хода на Шах (фиксация наличия Шаха на доске)
+ *
+ * Что не получилось:
+ * создать способ анализа будущей ситуации на доске, для реализации невозможности ходить, если ход не отменяет шах
+ * попытки этой реализации в закомментированных блоках
+ *
+ * */
 
 
 import java.util.regex.Pattern;
 
-public class ChessBoard implements Cloneable{
+public class ChessBoard implements Cloneable {
 
 
     public ChessPiece[][] board = new ChessPiece[8][8]; // creating a field for game
@@ -118,28 +118,28 @@ public class ChessBoard implements Cloneable{
                         board[0][0].check && board[0][4].check &&
                         !new King("White").isUnderAttack(this, 0, 2)) { // check that position not in under attack
                     board[0][4] = null;
-                    board[0][2] = new King("White");   // move King
-                    board[0][2].check = false;
+                    board[0][1] = new King("White");   // move King
+                    board[0][1].check = false;
                     board[0][0] = null;
-                    board[0][3] = new Rook("White");   // move Rook
-                    board[0][3].check = false;
+                    board[0][2] = new Rook("White");   // move Rook
+                    board[0][2].check = false;
                     nowPlayer = "Black";  // next turn
                     return true;
                 } else return false;
             } else return false;
         } else {
-            if (board[0][7] == null || board[0][4] == null) return false;
-            if (board[0][7].getSymbol().equals("R") && board[0][4].getSymbol().equals("K") && // check that King and Rook
-                    board[0][6] == null && board[0][5] == null) {              // never moved
-                if (board[0][7].getColor().equals("White") && board[0][4].getColor().equals("White") &&
-                        board[0][7].check && board[0][4].check &&
-                        !new King("White").isUnderAttack(this, 7, 2)) { // check that position not in under attack
-                    board[0][4] = null;
-                    board[0][6] = new King("White");   // move King
-                    board[0][6].check = false;
-                    board[0][7] = null;
-                    board[0][5] = new Rook("White");   // move Rook
-                    board[0][5].check = false;
+            if (board[7][0] == null || board[7][4] == null) return false;
+            if (board[7][0].getSymbol().equals("R") && board[7][4].getSymbol().equals("K") && // check that King and Rook
+                    board[7][1] == null && board[7][2] == null && board[7][3] == null) {              // never moved
+                if (board[7][0].getColor().equals("Black") && board[7][4].getColor().equals("Black") &&
+                        board[7][0].check && board[7][4].check &&
+                        !new King("Black").isUnderAttack(this, 7, 2)) { // check that position not in under attack
+                    board[7][4] = null;
+                    board[7][1] = new King("Black");   // move King
+                    board[7][1].check = false;
+                    board[7][0] = null;
+                    board[7][2] = new Rook("Black");   // move Rook
+                    board[7][2].check = false;
                     nowPlayer = "White";  // next turn
                     return true;
                 } else return false;
@@ -148,19 +148,19 @@ public class ChessBoard implements Cloneable{
     }
 
     public boolean castling7() {
-        if (nowPlayer.equals("Black")) {
-            if (board[7][0] == null || board[7][4] == null) return false;
-            if (board[7][0].getSymbol().equals("R") && board[7][4].getSymbol().equals("K") && // check that King and Rook
-                    board[7][1] == null && board[7][2] == null && board[7][3] == null) {              // never moved
-                if (board[7][0].getColor().equals("Black") && board[7][4].getColor().equals("Black") &&
-                        board[7][0].check && board[7][4].check &&
-                        !new King("Black").isUnderAttack(this, 0, 2)) { // check that position not in under attack
-                    board[7][4] = null;
-                    board[7][2] = new King("Black");   // move King
-                    board[7][2].check = false;
-                    board[7][0] = null;
-                    board[7][3] = new Rook("Black");   // move Rook
-                    board[7][3].check = false;
+        if (nowPlayer.equals("White")) {
+            if (board[0][7] == null || board[0][4] == null) return false;
+            if (board[0][7].getSymbol().equals("R") && board[0][4].getSymbol().equals("K") && // check that King and Rook
+                    board[0][6] == null && board[0][5] == null) {                             // never moved
+                if (board[0][7].getColor().equals("White") && board[0][4].getColor().equals("White") &&
+                        board[0][7].check && board[0][4].check &&
+                        !new King("White").isUnderAttack(this, 0, 6)) { // check that position nit in under attack
+                    board[0][4] = null;
+                    board[0][6] = new King("White");   // move King
+                    board[0][6].check = false;
+                    board[0][7] = null;
+                    board[0][5] = new Rook("White");   // move Rook
+                    board[0][5].check = false;
                     nowPlayer = "Black";  // next turn
                     return true;
                 } else return false;
@@ -168,17 +168,17 @@ public class ChessBoard implements Cloneable{
         } else {
             if (board[7][7] == null || board[7][4] == null) return false;
             if (board[7][7].getSymbol().equals("R") && board[7][4].getSymbol().equals("K") && // check that King and Rook
-                    board[7][6] == null && board[7][5] == null) {              // never moved
+                    board[7][6] == null && board[7][5] == null) {                             // never moved
                 if (board[7][7].getColor().equals("Black") && board[7][4].getColor().equals("Black") &&
                         board[7][7].check && board[7][4].check &&
-                        !new King("Black").isUnderAttack(this, 7, 2)) { // check that position not in under attack
+                        !new King("Black").isUnderAttack(this, 7, 6)) { // check that position not in under attack
                     board[7][4] = null;
                     board[7][6] = new King("Black");   // move King
                     board[7][6].check = false;
                     board[7][7] = null;
                     board[7][5] = new Rook("Black");   // move Rook
                     board[7][5].check = false;
-                    nowPlayer = "Black";  // next turn
+                    nowPlayer = "White";  // next turn
                     return true;
                 } else return false;
             } else return false;
@@ -276,11 +276,11 @@ public class ChessBoard implements Cloneable{
                     return false;
                 }
                 return true;
-              }
-                return false;
             }
             return false;
         }
+        return false;
+    }
 
 
 //    public boolean checkPositionAfterMove(int startLine, int startColumn, int endLine, int endColumn) {
